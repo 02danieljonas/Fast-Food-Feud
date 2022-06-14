@@ -2,7 +2,7 @@ import * as React from "react";
 // IMPORT ANY NEEDED COMPONENTS HERE
 import { createDataSet } from "./data/dataset";
 import "./App.css";
-import Instructions from "./components/Instructions/Instructions.jsx";
+import { Instructions } from "./components/Instructions/Instructions.jsx";
 import { Header } from "./components/Header/Header.jsx";
 import { DataSource } from "./components/DataSource/DataSource.jsx";
 import { MenuDisplay } from "./components/MenuDisplay/MenuDisplay.jsx";
@@ -27,25 +27,24 @@ export const appInfo = {
 // or this!
 const { data, categories, restaurants } = createDataSet();
 
+
+
 export function App() {
     const [category, setCategory] = useState(null);
     const categoryClick = (e) => {
         setCategory(category == e ? null : e);
         setSelectedMenuItem(null);
-        changeInstruction();
     };
 
     const [rest, setRest] = useState(null);
     const restClick = (e) => {
         setRest(rest == e ? null : e);
         setSelectedMenuItem(null);
-        changeInstruction();
     };
 
     const [selectedMenuItem, setSelectedMenuItem] = useState(null);
     const selectedClick = (e) => {
         setSelectedMenuItem(selectedMenuItem == e ? null : e);
-        changeInstruction();
     };
 
     let currentMenuItems = data.filter((e) => {
@@ -55,21 +54,14 @@ export function App() {
     });
 
     function changeInstruction() {
-        if (category) {
-            if (rest) {
-                if (selectedMenuItem) {
-                  return appInfo.instructions["allSelected"];
-                } else {
-                  return appInfo.instructions["noSelectedItem"];
-                }
-            } else {
-              return appInfo.instructions["onlyCategory"];
-            }
-        } else {
-            return appInfo.instructions["start"];
-        }
-    };
-    changeInstruction()
+        if (category && rest && selectedMenuItem) return appInfo.instructions["allSelected"];
+        if (category && rest) return appInfo.instructions["noSelectedItem"];
+        if (category) return appInfo.instructions["onlyCategory"];
+        if (rest) return appInfo.instructions["onlyRestaurant"];
+        return appInfo.instructions["start"];
+    }
+    
+    changeInstruction();
     return (
         <main className="App">
             {/* CATEGORIES COLUMN */}
@@ -94,9 +86,7 @@ export function App() {
                     setRest={setRest}
                 />
                 {/* INSTRUCTIONS GO HERE */}
-                <Instructions
-                    instructions={changeInstruction()}
-                />
+                <Instructions instructions={changeInstruction()} />
                 {/* MENU DISPLAY */}
                 <MenuDisplay
                     currentMenuItems={currentMenuItems}

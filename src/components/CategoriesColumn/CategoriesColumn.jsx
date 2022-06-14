@@ -1,6 +1,5 @@
 import { Chip } from "../../components/Chip/Chip.jsx";
 
-
 export const CategoriesColumn = ({ categories, category, categoryClick,  }) => {
     return (
         <div className="CategoriesColumn col">
